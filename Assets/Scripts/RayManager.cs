@@ -27,7 +27,7 @@ public class RayManager : MonoBehaviour {
 
 	public void ReplenishAvailable(GameObject ray) {
 		if(available.Contains(ray)) {
-			Debug.Log ("For some raisin, I already have this ray: ");
+			//Debug.Log ("For some raisin, I already have this ray: ");
 			return;
 		}
 		Rigidbody2D rgbd = ray.GetComponent<Rigidbody2D> ();
