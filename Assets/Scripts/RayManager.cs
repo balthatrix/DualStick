@@ -30,6 +30,8 @@ public class RayManager : MonoBehaviour {
 			//Debug.Log ("For some raisin, I already have this ray: ");
 			return;
 		}
+
+		Ray rComp = ray.GetComponent<Ray> ();
 		Rigidbody2D rgbd = ray.GetComponent<Rigidbody2D> ();
 		rgbd.velocity = Vector2.zero;
 		ray.transform.SetParent (rayHolder);
@@ -38,6 +40,7 @@ public class RayManager : MonoBehaviour {
 	}
 
 	private void Awake() {
+		Debug.Log("Ray name: " + rayPrefab.name);
 		if (instance == null) {
 			instance = this;
 		} else if(instance != this){
@@ -66,5 +69,6 @@ public class RayManager : MonoBehaviour {
 
 	private Vector3 LocationForNextAvailable() {
 		return new Vector3 (available.Count * availableXSpacing, availableYOffset, 0f);
+		//return new Vector3 (0, availableYOffset, 0f);
 	}
 }

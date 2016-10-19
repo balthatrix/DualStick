@@ -9,26 +9,44 @@ public class PlayerController : MonoBehaviour {
 
 	public float speed;
 	public float rayCooldown;
-	private bool rayCooling;
-	public RayManager rays;
 	public float raySpeed;
+	private bool rayCooling;
+	private bool dead;
+
+	public float dieTime;
+
+
+	public GameObject explosion;
+
+	private RayManager rays;
 
 	private Rigidbody2D rb2d;
+	public AudioSource rayAudioSrc;
+
 
 
 	private List<KeyCode> shootDirStack;
+
+	public AudioClip deathClip;
+
+	//public AudioSource deathSource;
+
+	public SpriteRenderer sprite;
 
 
 
 
 	void Start()
 	{
+		dead = false;
 		rayCooling = false;
 
 		shootDirStack = new List<KeyCode> ();
 		rb2d = GetComponent<Rigidbody2D> ();
+
 		rb2d.angularVelocity = 360f;
 		rays = RayManager.instance.GetComponent<RayManager> ();
+		SoundManager.instance.Register (tag + "Die");
 	} 
 
 	private void ShootKeyPressed(KeyCode key) {
@@ -63,6 +81,10 @@ public class PlayerController : MonoBehaviour {
 		rayRb.velocity = dir;
 		newRay.transform.position = transform.position;
 		newRay.transform.Rotate (0,0,ZRotationFromVect2(dir));
+
+		rayAudioSrc.pitch = SoundManager.instance.RandomPitch (1.5f, 2.5f);
+		rayAudioSrc.Play ();
+
 		StartCoroutine (CooldownRay());
 	}
 
@@ -80,6 +102,8 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate()
 	{
+		if (dead)
+			return;
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 		float x = moveHorizontal * speed;
@@ -189,6 +213,35 @@ public class PlayerController : MonoBehaviour {
 		return false;
 	}
 
+	public IEnumerator Die() {
+		if (!dead) {
+			dead = true;
+			SoundManager.instance.PlaySingleFor(tag+"Die", deathClip, .5f, .75f);
+
+			GameObject explode = Instantiate (explosion);
+
+			explode.transform.position = transform.position;
+
+
+			//Debug.Log ("rigidbody in Nav: " + GetComponent<Rigidbody2D>().ToString ());
+			rb2d.angularVelocity = -75f;
+
+			rb2d.velocity = new Vector3 (0,0,0);
+
+			CircleCollider2D coll = GetComponent<CircleCollider2D> ();
+			coll.enabled = false;
+
+			float remaining = dieTime;
+			while (remaining > 0.0f) {
+				remaining -= Time.deltaTime;
+				sprite.color = new Color (sprite.color.r, sprite.color.g, sprite.color.b, (remaining / dieTime));
+
+				yield return null;
+			}
+			Debug.Log ("Dying: ");
+			gameObject.SetActive (false);
+		}
+	}
 
 
 }
