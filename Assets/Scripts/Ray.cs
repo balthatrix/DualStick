@@ -27,9 +27,10 @@ public class Ray : MonoBehaviour {
 		if (alreadyHit)
 			return;
 
+		Debug.Log ("ray hit something: " + other.tag);
 
 
-		if(other.CompareTag("Player"))
+		if(other.CompareTag("Player") || other.CompareTag("PlayerMissile"))
 			return;
 
 		if (other.CompareTag ("Enemy")) {
@@ -37,6 +38,8 @@ public class Ray : MonoBehaviour {
 			BaseEnemy en = other.GetComponent<BaseEnemy> ();
 			en.TakeDamage (1);
 		}
+
+
 		//Debug.Log ("ray hit something other than player: " + other.tag);
 		GameObject newParticle = Instantiate(hitParticle);
 		Transform tip = gameObject.transform.GetChild (0);
