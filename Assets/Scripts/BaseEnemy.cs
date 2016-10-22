@@ -60,8 +60,12 @@ public class BaseEnemy : MonoBehaviour {
 		while (true) {
 			if(!movementPaused) {
 				currentNavTarget = FindTarget ();
-				Vector3 targetVel = currentNavTarget - transform.position;
-				targetVel = Vector3.ClampMagnitude (targetVel, moveSpeed);
+				Vector3 targetVel = (currentNavTarget - transform.position).normalized;
+				targetVel *= moveSpeed;
+//				if(targetVel.magnitude > moveSpeed) 
+//					targetVel = Vector3.ClampMagnitude (targetVel, moveSpeed);
+//				else
+//					targetVel = targetVel 
 				rb2d.velocity = targetVel;
 			}
 			yield return new WaitForSeconds (navUpdateFreq);

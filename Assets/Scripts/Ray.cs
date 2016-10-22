@@ -27,7 +27,7 @@ public class Ray : MonoBehaviour {
 		if (alreadyHit)
 			return;
 
-		Debug.Log ("ray hit something: " + other.tag);
+		//Debug.Log ("ray hit something: " + other.tag);
 
 
 		if(other.CompareTag("Player") || other.CompareTag("PlayerMissile") || other.CompareTag("Background"))

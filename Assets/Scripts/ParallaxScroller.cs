@@ -10,12 +10,12 @@ public class ParallaxScroller : MonoBehaviour {
 	//  0.0 means that the scrolling occurs exactly equal to the player's movement
 	public float parallaxRatio;
 	public Vector3 tilePosition;
-	private GameObject player;
+	private GameObject camera;
 
 
 	// Use this for initialization
 	void Start () {
-		player = GameObject.FindGameObjectWithTag ("Player");
+		camera = GameObject.FindGameObjectWithTag ("MainCamera");
 		//parallaxRatio = 0.5f;
 		//tilePosition = new Vector3 (0,0,0);
 		Sprite mySprite = GetComponent<SpriteRenderer>().sprite;
@@ -33,7 +33,7 @@ public class ParallaxScroller : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void LateUpdate () {
 		//sets position based on player's position.
 		SetPosition();
 	}
@@ -41,7 +41,7 @@ public class ParallaxScroller : MonoBehaviour {
 	private void SetPosition() {
 		//Vector3 playerComp = 
 		//Vector3 (tilePosition + Vector3.one) * parallaxRatio;
-		transform.position = tilePosition * tileOffset + ((player.transform.position * -1f) * parallaxRatio);
+		transform.position = tilePosition * tileOffset + ((camera.transform.position * -1f) * parallaxRatio);
 
 	}
 }
