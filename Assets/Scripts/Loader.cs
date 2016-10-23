@@ -4,6 +4,7 @@ using System.Collections;
 public class Loader : MonoBehaviour {
 	public GameObject rayManager;
 	public GameObject soundManager;
+	public GameObject waveManager;
 	// Use this for initialization
 	void Awake () 
 	{
@@ -16,6 +17,11 @@ public class Loader : MonoBehaviour {
 		{
 			Debug.Log ("Starting sound");
 			Instantiate (soundManager);
+		}
+		if (WaveManager.instance == null) 
+		{
+			Debug.Log ("Starting Wave Manager");
+			Instantiate (waveManager);
 		}
 	}
 
