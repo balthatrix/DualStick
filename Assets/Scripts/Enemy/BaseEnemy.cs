@@ -11,15 +11,11 @@ public class BaseEnemy : MonoBehaviour {
 	private SpriteRenderer sprite;
 	public GameObject explosion;
 
-	public GameObject player;
-	public Vector3 currentNavTarget;
 
 
 	public AudioClip dieClip;
 	public AudioSource hitSound;
 
-	public float moveSpeed;
-	public float navUpdateFreq;
 
 
 
@@ -48,37 +44,13 @@ public class BaseEnemy : MonoBehaviour {
 
 
 
-		player = GameObject.FindGameObjectWithTag ("Player");
-
 		//managed by the sound manager so when the game object is removed, the sound doesn't stop.
 		SoundManager.instance.Register (tag+"Die"+id);
 		SoundManager.instance.SetClipFor (tag + "Die"+id, dieClip);
 		SoundManager.instance.SetVolumeFor (tag + "Die"+id, 0.45f);
 
-		//Start navigation coroutine
-		StartCoroutine(Navigate());
 	}
 
-	public  IEnumerator Navigate() {
-		while (true) {
-			if(!movementPaused && !IsDead()) {
-				currentNavTarget = FindTarget ();
-				Vector3 targetVel = (currentNavTarget - transform.position).normalized;
-				targetVel *= moveSpeed;
-//				if(targetVel.magnitude > moveSpeed) 
-//					targetVel = Vector3.ClampMagnitude (targetVel, moveSpeed);
-//				else
-//					targetVel = targetVel 
-				rb2d.velocity = targetVel;
-			}
-			yield return new WaitForSeconds (navUpdateFreq);
-		}
-	}
-	
-	// Update is called once per frame
-	public virtual Vector3 FindTarget() {
-		return player.transform.position;
-	}
 
 
 	void Update () {

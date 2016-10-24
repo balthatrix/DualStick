@@ -18,8 +18,6 @@ public class NavigatorComponent : MonoBehaviour {
 
 
 
-	public bool movementPaused;
-
 	//private AudioSource dieSource;
 
 	public float dieTime;
@@ -39,7 +37,7 @@ public class NavigatorComponent : MonoBehaviour {
 
 	public  IEnumerator Navigate() {
 		while (true) {
-			if(!movementPaused && !enemyComponent.IsDead()) {
+			if(!enemyComponent.movementPaused && !enemyComponent.IsDead()) {
 				currentNavTarget = FindTarget ();
 				Vector3 targetVel = (currentNavTarget - transform.position).normalized;
 				targetVel *= moveSpeed;
