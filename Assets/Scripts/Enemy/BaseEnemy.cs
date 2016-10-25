@@ -60,7 +60,7 @@ public class BaseEnemy : MonoBehaviour {
 
 
 	public void TakeDamage(int amount) {
-		hitPoints -= 1;
+		hitPoints -= amount;
 		if (hitPoints <= 0) {
 			StartCoroutine (Die ());
 		} else {

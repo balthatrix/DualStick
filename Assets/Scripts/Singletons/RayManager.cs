@@ -33,11 +33,12 @@ public class RayManager : MonoBehaviour {
 
 		Ray rComp = ray.GetComponent<Ray> ();
 		Rigidbody2D rgbd = ray.GetComponent<Rigidbody2D> ();
-		rgbd.velocity = Vector2.zero;
 		ray.transform.SetParent (rayHolder);
+		rgbd.velocity = Vector2.zero;
 		ray.transform.position = LocationForNextAvailable ();
 		available.Add (ray);
 	}
+
 
 	private void Awake() {
 		Debug.Log("Ray name: " + rayPrefab.name);

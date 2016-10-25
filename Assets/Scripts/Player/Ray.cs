@@ -7,6 +7,7 @@ public class Ray : MonoBehaviour {
 
 	private RayManager rays;
 	private Rigidbody2D rgbd;
+	public Vector2 lastVelocity;
 	public GameObject hitParticle;
 	public bool alreadyHit = false;
 
@@ -27,11 +28,12 @@ public class Ray : MonoBehaviour {
 		if (alreadyHit)
 			return;
 
-		//Debug.Log ("ray hit something: " + other.tag);
 
 
 		if(other.CompareTag("Player") || other.CompareTag("PlayerMissile") || other.CompareTag("Background"))
 			return;
+
+
 
 		if (other.CompareTag ("Enemy")) {
 			alreadyHit = true;
@@ -43,7 +45,6 @@ public class Ray : MonoBehaviour {
 
 
 
-		//Debug.Log ("ray hit something other than player: " + other.tag);
 		GameObject newParticle = Instantiate(hitParticle);
 		Transform tip = gameObject.transform.GetChild (0);
 		newParticle.transform.position = tip.position;
@@ -52,6 +53,7 @@ public class Ray : MonoBehaviour {
 
 	void DestroyRay(GameObject ray) {
 		StartCoroutine (ResetAlreadyHit ());
+		lastVelocity = rgbd.velocity;
 		rays.ReplenishAvailable (ray);
 	}
 }

@@ -4,44 +4,12 @@ using System.Collections;
 public class Asteroid : BaseEnemy {
 
 
-	public Vector3 startVelocity;
+	public GameObject smallerAsteroid;
 
 	public override void Start() {
 		base.Start ();
-		rb2d.velocity = startVelocity;
-
-		Debug.Log ("start velocity: " + rb2d.velocity.ToString ());
+		//rb2d.velocity = startVelocity;
 		SoundManager.instance.SetVolumeFor (tag + "Die" + id, 2.5f);
-	}
-
-	void OnCollisionEnter2D (Collision2D other) {
-
-		foreach(ContactPoint2D contact in other.contacts)
-		{	
-
-			Vector2 otherV = new Vector2 (other.gameObject.transform.position.x, other.gameObject.transform.position.y);
-			Vector2 suggestionOffset = otherV - contact.point;
-
-			float xCom = Mathf.Round (suggestionOffset.x);
-			float yCom = Mathf.Round (suggestionOffset.y);
-			Debug.Log ("current: " + rb2d.velocity.ToString ());
-			if (Mathf.Abs (xCom) > Mathf.Abs (yCom)) {
-				Debug.Log ("collision was with a side");
-				rb2d.velocity = new Vector2 (-rb2d.velocity.x, rb2d.velocity.y);
-			} else {
-				Debug.Log ("collision was with a top/botom");
-				rb2d.velocity = new Vector2 (rb2d.velocity.x, -rb2d.velocity.y);
-			}
-			Debug.Log ("after: " + rb2d.velocity.ToString ());
-
-			//rb2d.velocity = startVelocity;
-//		
-//					newSugg.transform.SetParent (camera.transform);
-//					newSugg.transform.localPosition = Vector3.zero + new Vector3(xCom, yCom, 1) * 10f;// + new Vector3(suggestionOffset.x, suggestionOffset.y, 0.0f);
-//		
-//					newSugg.transform.Rotate(0,0, Mathf.Atan2(yCom, xCom) * Mathf.Rad2Deg + 180f);
-			//Debug.Log("new sugg t pos: "+ newSugg.transform.position);
-		}
 	}
 
 
@@ -50,19 +18,52 @@ public class Asteroid : BaseEnemy {
 			float xCom = other.offset.x;
 			float yCom = other.offset.y;
 			if (Mathf.Abs (xCom) > Mathf.Abs (yCom)) {
-				Debug.Log ("collision was with a side");
 				rb2d.velocity = new Vector2 (-rb2d.velocity.x, rb2d.velocity.y);
 			} else {
-				Debug.Log ("collision was with a top/botom");
 				rb2d.velocity = new Vector2 (rb2d.velocity.x, -rb2d.velocity.y);
 			}
-			Debug.Log ("Collide with " + gameObject.name + "  : " + other.tag + ": " + other.offset);
+		} else if (other.CompareTag ("PlayerMissile")) {
+			Rigidbody2D otherVel = other.GetComponent<Rigidbody2D> ();
+
+
+			if (name.Contains ("LargeAsteroid")) {
+				Vector2 vect = other.GetComponent<Ray> ().lastVelocity.normalized * 3.0f;
+				rb2d.velocity = rb2d.velocity + vect;
+			}
+
+		} else if (other.CompareTag ("Player")) {
+			Vector2 vect = other.GetComponent<Rigidbody2D> ().velocity.normalized * 4.0f;
+			StartCoroutine(other.GetComponent<PlayerController> ().Die ());
+			rb2d.velocity = rb2d.velocity + vect;
+			TakeDamage (2);
 		}
+
+			//else if(other.GetComponent<Asteroid>() != null) {
+//			Vector3 diff = other.transform.position - transform.position;
+//			float xCom = diff.x;
+//			float yCom = diff.y;
+//			if (Mathf.Abs (xCom) > Mathf.Abs (yCom)) {
+//				Debug.Log ("collision was with a side");
+//				rb2d.velocity = new Vector2 (-rb2d.velocity.x, rb2d.velocity.y);
+//			} else {
+//				Debug.Log ("collision was with a top/botom");
+//				rb2d.velocity = new Vector2 (rb2d.velocity.x, -rb2d.velocity.y);
+//			}
+//		}
 	}
 
 	public override IEnumerator Die() {
-		Debug.Log ("Asteroid dying!");
+		if (name.Contains ("LargeAsteroid")) {
+			for (int i = 0; i < 3; i++) {
+				GameObject smAsteroid = Instantiate (smallerAsteroid);
+				smAsteroid.transform.position = transform.position;
+				Rigidbody2D rb = smAsteroid.GetComponent<Rigidbody2D> ();
+
+				rb.velocity = rb2d.velocity * 1.35f;
+				rb.velocity = Quaternion.Euler(0f,0f, Random.Range(-45, 45)) * rb.velocity;
+			}
+		}
 		StartCoroutine(base.Die ());
-		yield return new WaitForSeconds (1);
+		yield return new WaitForSeconds(0);
 	}
 }
