@@ -1,21 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using System.Collections.Generic;
+
+namespace Enemy {
+	public delegate void OnEnemyDied(GameObject enemy);
+}
+
 
 public class BaseEnemy : MonoBehaviour {
+
 
 	private static int idCount = 0;
 	public int id;
 	public int hitPoints;
 	public Rigidbody2D rb2d;
 	private SpriteRenderer sprite;
+	//death particle
 	public GameObject explosion;
-
-
+	//spawn particle
+	public GameObject spawn;
 
 	public AudioClip dieClip;
 	public AudioSource hitSound;
 
+	private List<Enemy.OnEnemyDied> deathSubscribers;
 
 
 
@@ -24,9 +33,14 @@ public class BaseEnemy : MonoBehaviour {
 	//private AudioSource dieSource;
 
 	public float dieTime;
+	public float spawnTime;
 
 	public bool IsDead() {
 		return hitPoints <= 0;
+	}
+
+	public void AddDeathSubscription(Enemy.OnEnemyDied cb) {
+		deathSubscribers.Add(cb);
 	}
 
 	// Use this for initialization
@@ -42,8 +56,7 @@ public class BaseEnemy : MonoBehaviour {
 
 		sprite = GetComponent<SpriteRenderer> ();
 
-
-
+		deathSubscribers = new List<Enemy.OnEnemyDied> ();
 		//managed by the sound manager so when the game object is removed, the sound doesn't stop.
 		SoundManager.instance.Register (tag+"Die"+id);
 		SoundManager.instance.SetClipFor (tag + "Die"+id, dieClip);
@@ -97,6 +110,10 @@ public class BaseEnemy : MonoBehaviour {
 			yield return null;
 		}
 		explode.SetActive (false);
-		gameObject.SetActive (false);
+		foreach(Enemy.OnEnemyDied cb in deathSubscribers) {
+			cb (gameObject);
+		}
+		Destroy (gameObject);
 	}
+
 }

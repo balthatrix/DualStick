@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour {
 	private bool rayCooling;
 	private bool dead;
 
+	public Camera cam;
+
 	public float dieTime;
 
 
@@ -69,9 +71,16 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Update() {
-		UpdateDirStack();
-		if (shootDirStack.Count > 0 && !rayCooling) {
-			LaunchRay (GetShootUnitVector () * raySpeed);
+		//This is how to launch ray using arrow keys:
+//		UpdateDirStack();
+//		if (shootDirStack.Count > 0 && !rayCooling) {
+//			LaunchRay (GetShootUnitVector () * raySpeed);
+//		}
+
+		//This is how to launch using mouse pos:
+		if (Input.GetMouseButton(0) && !rayCooling) {
+			Vector2 dir = (cam.ScreenToWorldPoint (Input.mousePosition) - transform.position);
+			LaunchRay (dir.normalized * raySpeed);
 		}
 	}
 

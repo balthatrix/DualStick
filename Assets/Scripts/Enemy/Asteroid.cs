@@ -27,12 +27,12 @@ public class Asteroid : BaseEnemy {
 
 
 			if (name.Contains ("LargeAsteroid")) {
-				Vector2 vect = other.GetComponent<Ray> ().lastVelocity.normalized * 3.0f;
+				Vector2 vect = other.GetComponent<Ray> ().lastVelocity.normalized * 4.0f;
 				rb2d.velocity = rb2d.velocity + vect;
 			}
 
 		} else if (other.CompareTag ("Player")) {
-			Vector2 vect = other.GetComponent<Rigidbody2D> ().velocity.normalized * 4.0f;
+			Vector2 vect = other.GetComponent<Rigidbody2D> ().velocity.normalized * 5.0f;
 			StartCoroutine(other.GetComponent<PlayerController> ().Die ());
 			rb2d.velocity = rb2d.velocity + vect;
 			TakeDamage (2);
@@ -53,14 +53,15 @@ public class Asteroid : BaseEnemy {
 	}
 
 	public override IEnumerator Die() {
+		yield return new WaitForEndOfFrame ();
 		if (name.Contains ("LargeAsteroid")) {
 			for (int i = 0; i < 3; i++) {
 				GameObject smAsteroid = Instantiate (smallerAsteroid);
 				smAsteroid.transform.position = transform.position;
 				Rigidbody2D rb = smAsteroid.GetComponent<Rigidbody2D> ();
 
-				rb.velocity = rb2d.velocity * 1.35f;
-				rb.velocity = Quaternion.Euler(0f,0f, Random.Range(-45, 45)) * rb.velocity;
+				rb.velocity = rb2d.velocity * 1.7f;
+				rb.velocity = Quaternion.Euler(0f,0f, Random.Range(-90, 90)) * rb.velocity;
 			}
 		}
 		StartCoroutine(base.Die ());

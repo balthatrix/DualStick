@@ -5,12 +5,9 @@ using System.Collections.Generic;
 public class WaveManager : MonoBehaviour {
 
 
-	public int toYMapEdge = 30;
-	public int toXMapEdge = 30;
 
-	public GameObject[] enemies;
-
-	public int waveLevel = 1;
+	public GameObject[] waves;
+	private int waveI = 0;
 
 	public static WaveManager instance = null;
 
@@ -26,22 +23,21 @@ public class WaveManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		waveLevel = 1;
-		//NextWave ();
+		NextWave ();
 	}
 
 	private void NextWave() {
-		Debug.Log ("Next wave spawning in.....");
-		List<Vector3> spawnLocs = WaveManager.squareSpawnPattern (60, 20, 10, new Vector3 (0,0,0));
-		foreach (Vector3 loc in spawnLocs) {
-			GameObject newGo = Instantiate (enemies [0]);
-			newGo.transform.position = loc;
-		}
+		if (waveI >= waves.Length)
+			Debug.Log ("Game Over!");
+		else
+			Instantiate(waves[waveI]);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+
+	public void WaveComplete(Wave w) {
+		Destroy (w.gameObject);
+		waveI++;
+		NextWave ();
 	}
 
 	public static List<Vector3> squareSpawnPattern(int squareSize,  int count, int eachOffset, Vector3 centerOffset) {
@@ -106,32 +102,4 @@ public class WaveManager : MonoBehaviour {
 		return ret;
 	}
 
-	public class SpawnChunk {
-
-		public float timeOffset;
-
-		public List<Spawn> spawnList;
-
-		public virtual IEnumerator StartSpawning () {
-			return null;
-		}
-
-
-		public void addSpawn(GameObject spawn, Vector3 cameraOffset, float delayAfter) {
-			spawnList.Add (new Spawn (spawn, cameraOffset, delayAfter));
-		}
-
-
-
-		public class Spawn {
-			GameObject enemy;
-			Vector3 cameraOffset;
-			float delayAfter;
-			public Spawn(GameObject enemy, Vector3 cameraOffset, float delayAfter) {
-				this.enemy = enemy;
-				this.cameraOffset = cameraOffset;
-				this.delayAfter = delayAfter;
-			}
-		}
-	}
 }
