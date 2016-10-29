@@ -7,6 +7,7 @@ public class RedUFO : BaseEnemy {
 
 	public GameObject novaIn;
 	public GameObject novaOut;
+	public float supernovaTime;
 
 	public bool playerColliding;
 
@@ -43,7 +44,7 @@ public class RedUFO : BaseEnemy {
 	public IEnumerator AttemptSupernova(GameObject player) {
 		GameObject ni = Instantiate (novaIn);
 		ni.transform.position = transform.position;
-		yield return new WaitForSeconds (0.25f);
+		yield return new WaitForSeconds (supernovaTime);
 		GameObject no = Instantiate (novaOut);
 		no.transform.position = transform.position;
 		if (playerColliding) {

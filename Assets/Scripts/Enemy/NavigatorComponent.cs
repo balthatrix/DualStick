@@ -20,7 +20,6 @@ public class NavigatorComponent : MonoBehaviour {
 
 	//private AudioSource dieSource;
 
-	public float dieTime;
 
 
 	// Use this for initialization

@@ -31,7 +31,6 @@ public class RayManager : MonoBehaviour {
 			return;
 		}
 
-		Ray rComp = ray.GetComponent<Ray> ();
 		Rigidbody2D rgbd = ray.GetComponent<Rigidbody2D> ();
 		ray.transform.SetParent (rayHolder);
 		rgbd.velocity = Vector2.zero;
