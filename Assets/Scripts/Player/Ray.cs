@@ -30,7 +30,7 @@ public class Ray : MonoBehaviour {
 
 
 
-		if(other.CompareTag("Player") || other.CompareTag("PlayerMissile") || other.CompareTag("Background"))
+		if(other.CompareTag("Player") || other.CompareTag("PlayerMissile") ||  other.CompareTag("EnemyMissile") || other.CompareTag("Background"))
 			return;
 
 

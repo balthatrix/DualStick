@@ -4,7 +4,6 @@ using System.Collections;
 public class AdvancedNavigator : NavigatorComponent {
 	public Rigidbody2D playerRb;
 	public override void Start() {
-		Debug.Log ("HIHIHI");
 		base.Start ();
 
 		playerRb = player.GetComponent<Rigidbody2D> ();
