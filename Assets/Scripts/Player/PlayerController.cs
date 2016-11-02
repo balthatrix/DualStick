@@ -72,16 +72,16 @@ public class PlayerController : MonoBehaviour {
 
 	void Update() {
 		//This is how to launch ray using arrow keys:
-//		UpdateDirStack();
-//		if (shootDirStack.Count > 0 && !rayCooling) {
-//			LaunchRay (GetShootUnitVector () * raySpeed);
-//		}
+		UpdateDirStack();
+		if (shootDirStack.Count > 0 && !rayCooling) {
+			LaunchRay (GetShootUnitVector () * raySpeed);
+		}
 
 		//This is how to launch using mouse pos:
-		if (Input.GetMouseButton(0) && !rayCooling) {
-			Vector2 dir = (cam.ScreenToWorldPoint (Input.mousePosition) - transform.position);
-			LaunchRay (dir.normalized * raySpeed);
-		}
+//		if (Input.GetMouseButton(0) && !rayCooling) {
+//			Vector2 dir = (cam.ScreenToWorldPoint (Input.mousePosition) - transform.position);
+//			LaunchRay (dir.normalized * raySpeed);
+//		}
 	}
 
 	private void LaunchRay(Vector2 dir) {

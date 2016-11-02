@@ -25,7 +25,10 @@ public class EnemyRay : MonoBehaviour {
 		}
 
 		if (other.CompareTag ("Player")) {
-			other.GetComponent<PlayerController> ().Die();
+			Debug.Log ("you dead");
+			PlayerController p = other.GetComponent<PlayerController> ();
+			p.StartCoroutine (p.Die());
+
 		}
 
 		GameObject newParticle = Instantiate(hitParticle);
