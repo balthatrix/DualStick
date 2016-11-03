@@ -40,7 +40,6 @@ public class RayManager : MonoBehaviour {
 
 
 	private void Awake() {
-		Debug.Log("Ray name: " + rayPrefab.name);
 		if (instance == null) {
 			instance = this;
 		} else if(instance != this){

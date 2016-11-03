@@ -10,8 +10,10 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public float rayCooldown;
 	public float raySpeed;
+	private bool alternateRayShot;
 	private bool rayCooling;
 	private bool dead;
+	private Vector3 lastVelocity;
 
 	public Camera cam;
 
@@ -45,7 +47,7 @@ public class PlayerController : MonoBehaviour {
 
 		shootDirStack = new List<KeyCode> ();
 		rb2d = GetComponent<Rigidbody2D> ();
-
+		alternateRayShot = false;
 		rb2d.angularVelocity = 360f;
 		rays = RayManager.instance.GetComponent<RayManager> ();
 		SoundManager.instance.Register (tag + "Die");
@@ -78,23 +80,50 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		//This is how to launch using mouse pos:
-//		if (Input.GetMouseButton(0) && !rayCooling) {
-//			Vector2 dir = (cam.ScreenToWorldPoint (Input.mousePosition) - transform.position);
-//			LaunchRay (dir.normalized * raySpeed);
-//		}
+		if (Input.GetMouseButton(0) && !rayCooling) {
+			Vector2 dir = (cam.ScreenToWorldPoint (Input.mousePosition) - transform.position);
+			LaunchRay (dir.normalized * raySpeed);
+		}
 	}
 
 	private void LaunchRay(Vector2 dir) {
-		GameObject newRay = rays.PopAvailable();
-		Rigidbody2D rayRb = newRay.GetComponent<Rigidbody2D> ();
-		rayRb.velocity = dir;
-		newRay.transform.position = transform.position;
-		newRay.transform.Rotate (0,0,ZRotationFromVect2(dir));
+		LaunchSingleRay (dir);
 
 		rayAudioSrc.pitch = SoundManager.instance.RandomPitch (1.5f, 2.5f);
 		rayAudioSrc.Play ();
 
 		StartCoroutine (CooldownRay());
+	}
+
+	private void LaunchSingleRay(Vector2 dir) {
+		Vector3 cross = new Vector3 (dir.x, dir.y, 1.0f);
+		Vector3 perp = Vector3.Cross (dir, cross).normalized * .4f;
+		GameObject newRay1 = rays.PopAvailable();
+		Rigidbody2D rayRb1 = newRay1.GetComponent<Rigidbody2D> ();
+		rayRb1.velocity = dir;
+		if (alternateRayShot) {
+			newRay1.transform.position = transform.position + perp;
+		} else {
+			newRay1.transform.position = transform.position - perp;
+		}
+		alternateRayShot = !alternateRayShot;
+		newRay1.transform.Rotate (0,0,ZRotationFromVect2(dir));
+	}
+
+	private void LaunchDoubleRay(Vector2 dir) {
+		Vector3 cross = new Vector3 (dir.x, dir.y, 1.0f);
+		Vector3 perp = Vector3.Cross (dir, cross).normalized * .5f;
+		GameObject newRay1 = rays.PopAvailable();
+		GameObject newRay2 = rays.PopAvailable();
+		Rigidbody2D rayRb1 = newRay1.GetComponent<Rigidbody2D> ();
+		Rigidbody2D rayRb2 = newRay2.GetComponent<Rigidbody2D> ();
+		rayRb1.velocity = dir;
+		rayRb2.velocity = dir;
+
+		newRay1.transform.position = transform.position + perp;
+		newRay2.transform.position = transform.position - perp;
+		newRay1.transform.Rotate (0,0,ZRotationFromVect2(dir));
+		newRay2.transform.Rotate (0,0,ZRotationFromVect2(dir));
 	}
 
 	private float ZRotationFromVect2(Vector2 vect) {
@@ -120,7 +149,7 @@ public class PlayerController : MonoBehaviour {
 		Vector2 dir = new Vector2 (x,y);
 		dir = Vector2.ClampMagnitude (dir, speed);
 
-
+		lastVelocity = dir;
 		rb2d.velocity = dir;
 		if (rb2d.angularVelocity < 360f) {
 			rb2d.angularVelocity = 360f;

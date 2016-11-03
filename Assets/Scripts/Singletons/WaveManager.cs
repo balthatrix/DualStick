@@ -9,6 +9,8 @@ public class WaveManager : MonoBehaviour {
 	public GameObject[] waves;
 	private int waveI = 0;
 
+	private float lastWaveStart;
+
 	public static WaveManager instance = null;
 
 	// Use this for initialization
@@ -26,16 +28,23 @@ public class WaveManager : MonoBehaviour {
 		NextWave ();
 	}
 
+
 	private void NextWave() {
 		if (waveI >= waves.Length)
 			Debug.Log ("Game Over!");
-		else
-			Instantiate(waves[waveI]);
+		else {
+			lastWaveStart = Time.time;
+			Instantiate (waves [waveI]);
+		}
+	}
+
+	public float TimeSinceStartOfLastWave() {
+		return (Time.time - lastWaveStart);
 	}
 
 
 	public void WaveComplete(Wave w) {
-		Destroy (w.gameObject);
+		Debug.Log ("Time for wave " + (waveI + 1) + ": " + TimeSinceStartOfLastWave());
 		waveI++;
 		NextWave ();
 	}

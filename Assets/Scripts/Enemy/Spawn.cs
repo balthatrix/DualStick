@@ -9,6 +9,8 @@ public class Spawn : MonoBehaviour {
 	public int velModifierLow;
 	public int velModifierHigh;
 
+	private bool spawned = false;
+
 	private int spawnIncrements = 5;
 
 	private Wave parentWave;
@@ -21,7 +23,18 @@ public class Spawn : MonoBehaviour {
 	IEnumerator Start () {
 		yield return new WaitForSeconds (delay);
 		if (prefab != null) {
-			Debug.Log ("Spawning in my "+prefab.name);
+				StartCoroutine(SpawnIn ());
+
+
+		} else {
+			ChildrenSpawnsActivate ();
+		}
+	}
+
+	public IEnumerator SpawnIn() {
+		if (!spawned && prefab != null) {
+			spawned = true;
+
 			GameObject spawn = Instantiate (prefab);
 			spawn.transform.position = transform.position;
 
@@ -52,19 +65,33 @@ public class Spawn : MonoBehaviour {
 
 			Rigidbody2D rb = spawn.GetComponent<Rigidbody2D> ();
 			rb.velocity = startVelocity;
-			rb.velocity = Quaternion.Euler(0f,0f, Random.Range(velModifierLow, velModifierHigh)) * rb.velocity;
-
-
+			rb.velocity = Quaternion.Euler (0f, 0f, Random.Range (velModifierLow, velModifierHigh)) * rb.velocity;
 
 			en.AddDeathSubscription (new Enemy.OnEnemyDied (PrefabDied));
-		} else {
-			ChildrenSpawnsActivate ();
 		}
+
+		spawned = true;
 	}
 
 	public void PrefabDied(GameObject enemy) {
+		//ignore this callback if the spawn instance is null (next wave began)
+		if (this == null || parentWave == null)
+			return;
 		ChildrenSpawnsActivate ();
 		parentWave.CheckOffList (enemy);
+	}
+
+
+	public void ForceInSpawns() {
+		StartCoroutine(SpawnIn ());
+		int children = transform.childCount;
+		for (int i = 0; i < children; ++i) {
+			GameObject ch = transform.GetChild (i).gameObject;
+			if (ch != null) {
+				ch.SetActive (true);
+				ch.GetComponent<Spawn> ().ForceInSpawns();
+			}
+		}
 	}
 
 

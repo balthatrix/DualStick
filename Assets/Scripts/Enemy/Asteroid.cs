@@ -10,7 +10,7 @@ public class Asteroid : BaseEnemy {
 		base.Start ();
 		//rb2d.velocity = startVelocity;
 		Animator anim = GetComponent<Animator>();
-		Debug.Log ("animation for " + name + ": " + anim.GetCurrentAnimatorStateInfo(0));
+		//Debug.Log ("animation for " + name + ": " + anim.GetCurrentAnimatorStateInfo(0));
 		//anim.speed = -2;
 		SoundManager.instance.SetVolumeFor (tag + "Die" + id, 2.5f);
 	}
