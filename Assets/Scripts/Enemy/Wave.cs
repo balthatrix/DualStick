@@ -42,7 +42,7 @@ public class Wave : MonoBehaviour {
 				wholeLeft = left;
 				UpdateUntilNextText ();
 				if (wholeLeft <= 5 && wholeLeft > 0) {
-					UIManager.instance.DoFlash (wholeLeft.ToString (), .5f, .5f);
+					UIManager.instance.DoFlash (wholeLeft.ToString (), .35f, .45f);
 					Debug.Log ("WARNING NEXT WAVE COMING : " + wholeLeft);
 				}
 			}

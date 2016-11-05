@@ -80,10 +80,8 @@ public class UIManager : MonoBehaviour {
 
 	public void DoFlash(string text, float lerpTime, float waitTime) {
 		if (!flagging) {
-			Debug.Log ("flashing " + text + " " + lerpTime + " " + waitTime);
 			StartCoroutine (FlashText (new TextFlashParams(text, lerpTime, waitTime)));
 		} else {
-			Debug.Log ("cueing " + text + " " + lerpTime + " " + waitTime);
 			flashStack.Add (new TextFlashParams(text, lerpTime, waitTime));
 		}
 	}

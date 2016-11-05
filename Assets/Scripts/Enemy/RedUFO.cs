@@ -48,7 +48,11 @@ public class RedUFO : BaseEnemy {
 		GameObject no = Instantiate (novaOut);
 		no.transform.position = transform.position;
 		if (playerColliding) {
-			StartCoroutine(player.GetComponent<PlayerController> ().Die ());
+			player.GetComponent<PlayerController> ().TakeDamage (1);
+			movementPaused = false;
+			if (playerColliding && !player.GetComponent<PlayerController>().dead) {
+				StartCoroutine (AttemptSupernova (player));
+			}
 		} else {
 			movementPaused = false;
 		}

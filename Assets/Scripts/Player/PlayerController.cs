@@ -12,7 +12,10 @@ public class PlayerController : MonoBehaviour {
 	public float raySpeed;
 	private bool alternateRayShot;
 	private bool rayCooling;
-	private bool dead;
+	public bool dead;
+
+	private int hitPoints;
+
 	private Vector3 lastVelocity;
 
 	public Camera cam;
@@ -50,6 +53,7 @@ public class PlayerController : MonoBehaviour {
 		alternateRayShot = false;
 		rb2d.angularVelocity = 360f;
 		rays = RayManager.instance.GetComponent<RayManager> ();
+		hitPoints = 3;
 		SoundManager.instance.Register (tag + "Die");
 	} 
 
@@ -278,6 +282,14 @@ public class PlayerController : MonoBehaviour {
 			}
 			Debug.Log ("Dying: ");
 			gameObject.SetActive (false);
+		}
+	}
+
+	public void TakeDamage(int amount) {
+		Debug.Log ("Takin damsey: " + amount);
+		hitPoints -= amount;
+		if (hitPoints <= 0) {
+			StartCoroutine(Die ());
 		}
 	}
 

@@ -39,7 +39,7 @@ public class Asteroid : BaseEnemy {
 
 		} else if (other.CompareTag ("Player")) {
 			Vector2 vect = other.GetComponent<Rigidbody2D> ().velocity.normalized * 5.0f;
-			StartCoroutine(other.GetComponent<PlayerController> ().Die ());
+			other.GetComponent<PlayerController> ().TakeDamage (1);
 			rb2d.velocity = rb2d.velocity + vect;
 			TakeDamage (2);
 		}
