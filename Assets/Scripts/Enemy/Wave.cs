@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Wave : MonoBehaviour {
 
 	private int numToKill;
 	public int timeAlotted;
 	public float startedAt;
+
+	private bool ending;
+
+	private int wholeLeft = -1;
+
 	private bool finished = false;
 
 	// Use this for initialization
@@ -17,15 +23,47 @@ public class Wave : MonoBehaviour {
 		TallyChildrenSpawns ();
 		ChildrenSpawnsActivate ();
 	}
+
 	void Update() {
-		if (TimeForNext()) {
+		if (TimeForNext() && !finished) {
 			Debug.Log ("Force completing the wave");
 			StartCoroutine(FinishWave ());
 		}
+		SetUntilNext ();
+	}
+
+	void SetUntilNext() {
+		float epoch = SecondsSinceStarted ();
+		float exactLeft = timeAlotted - epoch;
+
+		int left = (int)exactLeft;
+		if (wholeLeft != left) {
+			if (!ending) {
+				wholeLeft = left;
+				UpdateUntilNextText ();
+				if (wholeLeft <= 5 && wholeLeft > 0) {
+					UIManager.instance.DoFlash (wholeLeft.ToString (), .5f, .5f);
+					Debug.Log ("WARNING NEXT WAVE COMING : " + wholeLeft);
+				}
+			}
+		}
+	}
+
+
+
+	void UpdateUntilNextText() {
+		TimeSpan timeSpan = TimeSpan.FromSeconds(wholeLeft);
+		string timeText = timeSpan.Minutes.ToString ().PadLeft (2, '0') + ":" + timeSpan.Seconds.ToString ().PadLeft (2, '0');
+
+		WaveManager.instance.untilNextWave.text = "Next Wave: " + timeText;
+	}
+
+	private float SecondsSinceStarted() {
+		return Time.time - startedAt;
 	}
 
 	bool TimeForNext() {
-		return Time.time - startedAt > timeAlotted;
+		return SecondsSinceStarted() > timeAlotted;
 	}
 
 
@@ -96,6 +134,7 @@ public class Wave : MonoBehaviour {
 	}
 
 	IEnumerator selfDestruct() {
+		ending = true;
 		//wait for the rest of the spawn to get in if they are there...
 		yield return new WaitForSeconds (3.0f);
 		Destroy (gameObject);

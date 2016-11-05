@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour {
-
-
-
+	
+	public Text untilNextWave;
+	public Text currentWave;
 	public GameObject[] waves;
 	private int waveI = 0;
 
@@ -34,7 +35,16 @@ public class WaveManager : MonoBehaviour {
 			Debug.Log ("Game Over!");
 		else {
 			lastWaveStart = Time.time;
+			SetWaveText ();
 			Instantiate (waves [waveI]);
+		}
+	}
+
+	private void SetWaveText() {
+		if(waveI < 10) {
+			currentWave.text = "Wave: 0" + (waveI + 1);
+		} else {
+			currentWave.text = "Wave: " + (waveI + 1);
 		}
 	}
 

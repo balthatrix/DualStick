@@ -23,6 +23,12 @@ public class Loader : MonoBehaviour {
 			Debug.Log ("Starting Wave Manager");
 			Instantiate (waveManager);
 		}
+
+		if (UIManager.instance == null) 
+		{
+			Debug.Log ("Starting UI Manager");
+			Instantiate (waveManager);
+		}
 	}
 
 }
