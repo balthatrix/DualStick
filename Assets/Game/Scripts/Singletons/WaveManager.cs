@@ -37,7 +37,7 @@ public class WaveManager : MonoBehaviour {
 			lastWaveStart = Time.time;
 			SetWaveText ();
 			Instantiate (waves [waveI]);
-			UIManager.instance.DoFlash ("Wave: " + (waveI + 1), .5f, .5f);
+			UIManager.instance.DoFlash ("Wave  " + (waveI + 1), .5f, .5f);
 		}
 	}
 

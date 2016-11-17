@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour {
 
 	private void LaunchSingleRay(Vector2 dir) {
 		Vector3 cross = new Vector3 (dir.x, dir.y, 1.0f);
-		Vector3 perp = Vector3.Cross (dir, cross).normalized * .4f;
+		Vector3 perp = Vector3.Cross (dir, cross).normalized * .35f;
 		GameObject newRay1 = rays.PopAvailable();
 		Rigidbody2D rayRb1 = newRay1.GetComponent<Rigidbody2D> ();
 		rayRb1.velocity = dir;
