@@ -22,7 +22,6 @@ public class Spawn : MonoBehaviour {
 	// Use this for initialization
 	IEnumerator Start () {
 		yield return new WaitForSeconds (delay);
-		Debug.Log ("spawned!");
 		if (prefab != null) {
 				StartCoroutine(SpawnIn ());
 

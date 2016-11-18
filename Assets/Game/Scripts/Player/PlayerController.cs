@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 
+
 public class PlayerController : MonoBehaviour {
 
 
@@ -13,6 +14,8 @@ public class PlayerController : MonoBehaviour {
 	private bool alternateRayShot;
 	private bool rayCooling;
 	public bool dead;
+
+	public GameObject gameOverPanel;
 
 	private int hitPoints;
 
@@ -281,6 +284,7 @@ public class PlayerController : MonoBehaviour {
 				yield return null;
 			}
 			Debug.Log ("Dying: ");
+			gameOverPanel.SetActive (true);
 			gameObject.SetActive (false);
 		}
 	}

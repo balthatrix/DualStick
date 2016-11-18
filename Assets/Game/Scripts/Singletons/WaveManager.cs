@@ -34,10 +34,10 @@ public class WaveManager : MonoBehaviour {
 		if (waveI >= waves.Length)
 			Debug.Log ("Game Over!");
 		else {
+			UIManager.instance.DoFlash ("Wave  " + (waveI + 1), .5f, .5f);
 			lastWaveStart = Time.time;
 			SetWaveText ();
 			Instantiate (waves [waveI]);
-			UIManager.instance.DoFlash ("Wave  " + (waveI + 1), .5f, .5f);
 		}
 	}
 
@@ -55,7 +55,6 @@ public class WaveManager : MonoBehaviour {
 
 
 	public void WaveComplete(Wave w) {
-		Debug.Log ("Time for wave " + (waveI + 1) + ": " + TimeSinceStartOfLastWave());
 		waveI++;
 		NextWave ();
 	}

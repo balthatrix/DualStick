@@ -46,22 +46,36 @@ public class RayManager : MonoBehaviour {
 			Destroy (gameObject);
 		}
 		DontDestroyOnLoad (gameObject);
+		InitPool ();
+	}
 
+	public void OnRestart() {
 		InitPool ();
 	}
 
 
 
+
+
 	public void InitPool() {
 		available = new List<GameObject> ();
+		Debug.Log ("rays are inting " + available.Count);
+		Destroy(GameObject.Find ("Rays"));
 		rayHolder = new GameObject ("Rays").transform;
 
 		for (int i = 0; i < poolSize; i++) {
 			GameObject rayInst = Instantiate (rayPrefab,
 				LocationForNextAvailable(),
 				Quaternion.identity) as GameObject;
+
+			Debug.Log ("From this " + rayPrefab.ToString() + ", created this: " + rayInst.ToString());
 			rayInst.transform.SetParent (rayHolder);
+
+			Debug.Log ("Adding to the available: " + available.Count);
 			available.Add (rayInst);
+
+			DontDestroyOnLoad (rayInst);
+			Debug.Log ("Now the size: " + available.Count);
 		}
 	}
 

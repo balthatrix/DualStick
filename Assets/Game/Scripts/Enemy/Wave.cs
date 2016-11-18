@@ -41,9 +41,13 @@ public class Wave : MonoBehaviour {
 			if (!ending) {
 				wholeLeft = left;
 				UpdateUntilNextText ();
-				if (wholeLeft <= 5 && wholeLeft > 0) {
-					UIManager.instance.DoFlash (wholeLeft.ToString (), .35f, .45f);
-					Debug.Log ("WARNING NEXT WAVE COMING : " + wholeLeft);
+				if (wholeLeft <= 5 && wholeLeft >= 0) {
+					if (wholeLeft > 0) {
+						UIManager.instance.DoFlash (wholeLeft.ToString (), .35f, .35f);
+					} else {
+						UIManager.instance.DoFlash ("WARNING!!!", .35f, .35f);
+
+					}
 				}
 			}
 		}
@@ -55,7 +59,7 @@ public class Wave : MonoBehaviour {
 		TimeSpan timeSpan = TimeSpan.FromSeconds(wholeLeft);
 		string timeText = timeSpan.Minutes.ToString ().PadLeft (2, '0') + ":" + timeSpan.Seconds.ToString ().PadLeft (2, '0');
 
-		WaveManager.instance.untilNextWave.text = "Next Wave: " + timeText;
+		UIManager.instance.timeLeft.text = "Next Wave: " + timeText;
 	}
 
 	private float SecondsSinceStarted() {
@@ -85,7 +89,6 @@ public class Wave : MonoBehaviour {
 			TallyNumToKill (transform.GetChild(i).gameObject);
 		}
 
-		Debug.Log ("Done with tally: " + numToKill);
 	}
 
 	public void TallyNumToKill(GameObject childSpawn) {
