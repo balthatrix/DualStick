@@ -8,6 +8,8 @@ public class Wave : MonoBehaviour {
 	public int timeAlotted;
 	public float startedAt;
 
+	public bool frozen;
+
 	private bool ending;
 
 	private int wholeLeft = -1;
@@ -16,6 +18,7 @@ public class Wave : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		this.frozen = false;
 		startedAt = Time.time;
 		if (timeAlotted == null || timeAlotted == 0f) {
 			timeAlotted = 40;
@@ -24,9 +27,16 @@ public class Wave : MonoBehaviour {
 		ChildrenSpawnsActivate ();
 	}
 
+	public void SetFrozen(bool frozen) {
+		this.frozen = frozen;
+	}
+
 	void Update() {
+
+		if (this.frozen) {
+			return;
+		}
 		if (TimeForNext() && !finished) {
-			Debug.Log ("Force completing the wave");
 			StartCoroutine(FinishWave ());
 		}
 		SetUntilNext ();
@@ -110,8 +120,7 @@ public class Wave : MonoBehaviour {
 		}
 	}
 
-	//nessecary for clearing out small asteroids..... but is it really nessecary?
-	//used to wait for all to be destroyed, but now more exciting
+
 	public IEnumerator FinishWave() {
 		if(!finished) {
 		finished = true;

@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class WaveManager : MonoBehaviour {
 	
 	public Text untilNextWave;
-	public Text currentWave;
+	public Text currentWaveText;
+	public Wave currentWave;
 	public GameObject[] waves;
 	private int waveI = 0;
 
@@ -21,13 +22,18 @@ public class WaveManager : MonoBehaviour {
 		else if (instance != this)
 			Destroy (gameObject);
 		
-		DontDestroyOnLoad (gameObject);
+		//DontDestroyOnLoad (gameObject);
+	}
+
+	public void FreezeCurrent(bool freeze) {
+		currentWave.SetFrozen (freeze);
 	}
 
 	// Use this for initialization
 	void Start () {
 		NextWave ();
 	}
+
 
 
 	private void NextWave() {
@@ -37,15 +43,16 @@ public class WaveManager : MonoBehaviour {
 			UIManager.instance.DoFlash ("Wave  " + (waveI + 1), .5f, .5f);
 			lastWaveStart = Time.time;
 			SetWaveText ();
-			Instantiate (waves [waveI]);
+			GameObject w = Instantiate (waves [waveI]);
+			currentWave = w.GetComponent<Wave> ();
 		}
 	}
 
 	private void SetWaveText() {
 		if(waveI < 10) {
-			currentWave.text = "Wave: 0" + (waveI + 1);
+			currentWaveText.text = "Wave: 0" + (waveI + 1);
 		} else {
-			currentWave.text = "Wave: " + (waveI + 1);
+			currentWaveText.text = "Wave: " + (waveI + 1);
 		}
 	}
 

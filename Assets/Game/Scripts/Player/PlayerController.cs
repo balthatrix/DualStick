@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour {
 	private bool rayCooling;
 	public bool dead;
 
+	public int score;
+
 	public GameObject gameOverPanel;
 
 	private int hitPoints;
@@ -80,8 +82,11 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Update() {
+		
 		//This is how to launch ray using arrow keys:
 		UpdateDirStack();
+		if (dead)
+			return;
 		if (shootDirStack.Count > 0 && !rayCooling) {
 			LaunchRay (GetShootUnitVector () * raySpeed);
 		}
@@ -283,14 +288,13 @@ public class PlayerController : MonoBehaviour {
 
 				yield return null;
 			}
-			Debug.Log ("Dying: ");
+			yield return new WaitForSeconds (1.0f);
+			WaveManager.instance.FreezeCurrent (true);
 			gameOverPanel.SetActive (true);
-			gameObject.SetActive (false);
 		}
 	}
 
 	public void TakeDamage(int amount) {
-		Debug.Log ("Takin damsey: " + amount);
 		hitPoints -= amount;
 		if (hitPoints <= 0) {
 			UIManager.instance.SetHealthColor ("red");

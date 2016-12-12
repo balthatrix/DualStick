@@ -9,7 +9,14 @@ public class UIManager : MonoBehaviour {
 	public Text flagText;
 	public Text currentWave;
 	public Text timeLeft;
+	public Text score;
+	public GameObject scoreTextPrefab;
 	public RawImage playerLife;
+
+
+	public void SetScore(int s) {
+		score.text = "Score: " + s.ToString ();
+	}
 
 	private List<TextFlashParams> flashStack;
 	private bool flagging;
@@ -32,7 +39,7 @@ public class UIManager : MonoBehaviour {
 		else if (instance != this)
 			Destroy (gameObject);
 
-		DontDestroyOnLoad (gameObject);
+		//DontDestroyOnLoad (gameObject);
 	}
 
 	// Use this for initialization

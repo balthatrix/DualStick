@@ -20,7 +20,7 @@ public class SoundManager : MonoBehaviour {
 		else if (instance != this)
 			Destroy (gameObject);
 		efxRegistry = new Dictionary<string, AudioSource> ();
-		DontDestroyOnLoad (gameObject);
+		//DontDestroyOnLoad (gameObject);
 	}
 
 

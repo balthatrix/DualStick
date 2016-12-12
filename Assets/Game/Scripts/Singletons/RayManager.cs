@@ -45,7 +45,11 @@ public class RayManager : MonoBehaviour {
 		} else if(instance != this){
 			Destroy (gameObject);
 		}
-		DontDestroyOnLoad (gameObject);
+		//DontDestroyOnLoad (gameObject);
+
+	}
+
+	private void Start() {
 		InitPool ();
 	}
 
@@ -59,7 +63,6 @@ public class RayManager : MonoBehaviour {
 
 	public void InitPool() {
 		available = new List<GameObject> ();
-		Debug.Log ("rays are inting " + available.Count);
 		Destroy(GameObject.Find ("Rays"));
 		rayHolder = new GameObject ("Rays").transform;
 
@@ -68,14 +71,11 @@ public class RayManager : MonoBehaviour {
 				LocationForNextAvailable(),
 				Quaternion.identity) as GameObject;
 
-			Debug.Log ("From this " + rayPrefab.ToString() + ", created this: " + rayInst.ToString());
 			rayInst.transform.SetParent (rayHolder);
 
-			Debug.Log ("Adding to the available: " + available.Count);
 			available.Add (rayInst);
 
 			DontDestroyOnLoad (rayInst);
-			Debug.Log ("Now the size: " + available.Count);
 		}
 	}
 

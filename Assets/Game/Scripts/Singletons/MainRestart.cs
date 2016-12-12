@@ -7,7 +7,7 @@ public class MainRestart : MonoBehaviour {
 	
 	public void RestartMainScene() {
 		SceneManager.LoadScene (1);
-		RayManager.instance.OnRestart ();
+		//RayManager.instance.OnRestart ();
 	}
 
 	// Use this for initialization

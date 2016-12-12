@@ -24,6 +24,9 @@ public class BaseEnemy : MonoBehaviour {
 	public AudioClip dieClip;
 	public AudioSource hitSound;
 
+
+	public int scoreGiven;
+
 	private List<Enemy.OnEnemyDied> deathSubscribers;
 
 
@@ -66,9 +69,6 @@ public class BaseEnemy : MonoBehaviour {
 
 
 
-	void Update () {
-	}
-
 
 
 
@@ -101,6 +101,16 @@ public class BaseEnemy : MonoBehaviour {
 
 		CircleCollider2D coll = GetComponent<CircleCollider2D> ();
 		coll.enabled = false;
+
+		//score stuff
+		GameObject text = Instantiate (UIManager.instance.scoreTextPrefab);
+		text.transform.position = gameObject.transform.position;
+		ScoreText scr = text.GetComponent<ScoreText> ();
+		scr.SetText (scoreGiven.ToString());
+		PlayerController pc = GameObject.Find ("Player").GetComponent<PlayerController> ();
+		pc.score += scoreGiven;
+		UIManager.instance.SetScore (pc.score);
+
 
 		float remaining = dieTime;
 		while (remaining > 0.0f) {
