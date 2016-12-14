@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
+using System.IO;
+
+using System.Runtime.Serialization.Formatters.Binary;
 
 
 
@@ -16,6 +20,8 @@ public class PlayerController : MonoBehaviour {
 	public bool dead;
 
 	public int score;
+	public int highScore;
+	private bool highScoreBeaten;
 
 	public GameObject gameOverPanel;
 
@@ -60,6 +66,8 @@ public class PlayerController : MonoBehaviour {
 		rays = RayManager.instance.GetComponent<RayManager> ();
 		hitPoints = 3;
 		SoundManager.instance.Register (tag + "Die");
+
+		LoadHighScore ();
 	} 
 
 	private void ShootKeyPressed(KeyCode key) {
@@ -291,6 +299,7 @@ public class PlayerController : MonoBehaviour {
 			yield return new WaitForSeconds (1.0f);
 			WaveManager.instance.FreezeCurrent (true);
 			gameOverPanel.SetActive (true);
+			SaveHighScore ();
 		}
 	}
 
@@ -309,5 +318,60 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
+	public void AddScore(int sc) {
+		score += sc;
+		UIManager.instance.SetScore (score);
+		Debug.Log ("s/hs: " + score + "/" + highScore);
+		if (score > highScore) {
+			Debug.Log ("Beating high score!");
+			highScoreBeaten = true;
+			highScore = score;
+			UIManager.instance.SetHighScore (highScore);
+		}
+	}
 
+
+
+	public void SaveHighScore() {
+		GameObject gm = GameObject.Find ("Congratulations");
+		if (highScoreBeaten) {
+			Debug.Log ("Saving new High Score");
+			BinaryFormatter bf = new BinaryFormatter ();
+			FileStream fs = File.Open (Application.persistentDataPath + "/highScore.dat", FileMode.OpenOrCreate);
+			PlayerData pd = new PlayerData ();
+			pd.highScore = highScore;
+			bf.Serialize (fs, pd);
+			fs.Close ();
+
+
+			gm.SetActive (true);
+			Text t = gm.GetComponent<Text> ();
+			t.text = "Congratulations!\nNew High Score: " + highScore;
+		} else {
+			gm.SetActive (false);
+		}
+	}
+
+	public void LoadHighScore() {
+		if (File.Exists (Application.persistentDataPath + "/highScore.dat")) {
+			BinaryFormatter bf = new BinaryFormatter ();
+			FileStream file = File.Open (Application.persistentDataPath + "/highScore.dat", FileMode.Open);
+			PlayerData pd = (PlayerData)bf.Deserialize (file);
+			file.Close ();
+			highScore = pd.highScore;
+		} else {
+			Debug.Log ("Initting a high score");
+			highScore = 0;
+		}
+
+		UIManager.instance.SetHighScore (highScore);
+	}
+
+
+
+}
+
+[Serializable]
+class PlayerData {
+	public int highScore;
 }

@@ -108,8 +108,7 @@ public class BaseEnemy : MonoBehaviour {
 		ScoreText scr = text.GetComponent<ScoreText> ();
 		scr.SetText (scoreGiven.ToString());
 		PlayerController pc = GameObject.Find ("Player").GetComponent<PlayerController> ();
-		pc.score += scoreGiven;
-		UIManager.instance.SetScore (pc.score);
+		pc.AddScore (scoreGiven);
 
 
 		float remaining = dieTime;

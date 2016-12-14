@@ -10,12 +10,16 @@ public class UIManager : MonoBehaviour {
 	public Text currentWave;
 	public Text timeLeft;
 	public Text score;
+	public Text highScore;
 	public GameObject scoreTextPrefab;
 	public RawImage playerLife;
 
 
 	public void SetScore(int s) {
 		score.text = "Score: " + s.ToString ();
+	}
+	public void SetHighScore(int s) {
+		highScore.text = "High Score: " + s.ToString ();
 	}
 
 	private List<TextFlashParams> flashStack;
